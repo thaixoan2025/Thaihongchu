@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>人個简历</title>
+    <style>
+      :root {
+        --bg: #f6f8fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --accent: #3b82f6;
+        --text: #111827;
+        --border: #e6eefc;
+        --skill-bg: #f3f6ff;
+        --skill-text: #0f172a;
+        --title-color: #1e293b;
+        --section-bg: #fbfdff;
+        --badge-bg: #eef6ff;
+        --project-desc: #4b5563;
+        --button-hover: #f0f7ff;
+        --maxw: 900px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Noto Sans TC", "Helvetica Neue", Arial;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, var(--bg), #eef3fb);
+        color: var(--text);
+        font-size: 16px;
+        line-height: 1.45;
+      }
+      .container {
+        max-width: var(--maxw);
+        margin: 28px auto;
+        padding: 20px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 12px;
+        box-shadow: 0 6px 22px rgba(14, 30, 37, 0.08);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+      }
+      .left {
+        padding: 28px;
+        background: linear-gradient(180deg, var(--section-bg), #f3f8ff);
+      }
+      .right {
+        padding: 28px;
+      }
+      .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid #eef6ff;
+        object-fit: cover;
+        margin-bottom: 16px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 24px;
+        color: var(--title-color);
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 14px;
+        margin-top: 6px;
+      }
+      .section {
+        margin-bottom: 24px;
+      }
+      .section h3 {
+        margin: 0 0 12px 0;
+        font-size: 16px;
+        color: var(--title-color);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 6px;
+      }
+      .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: var(--badge-bg);
+        color: var(--accent);
+        font-size: 13px;
+        margin: 4px 6px 0 0;
+      }
+      ul {
+        padding-left: 16px;
+        margin: 6px 0;
+      }
+      .skill-list {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .skill {
+        background: var(--skill-bg);
+        border-radius: 8px;
+        padding: 6px 8px;
+        margin: 6px 8px 0 0;
+        font-size: 13px;
+        color: var(--skill-text);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .contact-item {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      button {
+        cursor: pointer;
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--accent);
+      }
+      .btn-ghost:hover {
+        background: var(--button-hover);
+      }
+      .print-note {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+      @media (max-width: 880px) {
+        .card {
+          grid-template-columns: 1fr;
+        }
+        .left {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          align-items: center;
+          padding: 18px;
+        }
+        .right {
+          padding: 18px;
+        }
+      }
+      /* small resume table styles */
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .row .col {
+        flex: 1;
+      }
+      .title {
+        font-weight: 700;
+      }
+      footer {
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+        padding: 14px;
+      }
+      .education-item,
+      .project-item {
+        margin-bottom: 16px;
+      }
+      .education-item .title,
+      .project-item .title {
+        color: var(--title-color);
+      }
+      .education-item .period,
+      .project-item .period {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .project-desc {
+        font-size: 14px;
+        color: var(--project-desc);
+        margin-top: 4px;
+      }
+
+      /* 打印样式 - 完全重写确保兼容性 */
+      @media print {
+        /* 重置所有打印样式 */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          background: white !important;
+          color: black !important;
+          font-size: 12px;
+          line-height: 1.4;
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+        }
+
+        .container {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 !important;
+          padding: 10mm !important;
+          box-shadow: none !important;
+        }
+
+        .card {
+          display: grid !important;
+          grid-template-columns: 35% 65% !important;
+          width: 100% !important;
+          background: white !important;
+          border: 1px solid #ccc !important;
+          box-shadow: none !important;
+          border-radius: 0 !important;
+          margin: 0 !important;
+          page-break-inside: avoid !important;
+        }
+
+        .left {
+          background: #f8f9fa !important;
+          padding: 15px !important;
+          border-right: 1px solid #ccc !important;
+        }
+
+        .right {
+          background: white !important;
+          padding: 15px !important;
+        }
+
+        /* 隐藏不需要打印的元素 */
+        .controls,
+        footer,
+        button,
+        .btn-primary,
+        .btn-ghost,
+        #printBtn,
+        #toggleTheme,
+        #downloadHtml,
+        #copyId {
+          display: none !important;
+        }
+
+        /* 头像样式 */
+        .avatar {
+          width: 80px !important;
+          height: 80px !important;
+          border: 2px solid #999 !important;
+          display: block !important;
+          margin: 0 auto 10px !important;
+        }
+
+        /* 文字样式 */
+        h1 {
+          font-size: 18px !important;
+          color: black !important;
+          text-align: center !important;
+          margin-bottom: 5px !important;
+        }
+
+        .meta {
+          color: #666 !important;
+          font-size: 12px !important;
+          text-align: center !important;
+          margin-bottom: 15px !important;
+        }
+
+        .section {
+          margin-bottom: 15px !important;
+        }
+
+        .section h3 {
+          font-size: 14px !important;
+          color: black !important;
+          border-bottom: 1px solid #ccc !important;
+          padding-bottom: 5px !important;
+          margin-bottom: 8px !important;
+        }
+
+        .contact-item {
+          font-size: 11px !important;
+          margin-bottom: 5px !important;
+          color: black !important;
+        }
+
+        .contact-item strong {
+          color: black !important;
+        }
+
+        .muted {
+          color: #666 !important;
+        }
+
+        /* 技能标签 */
+        .skill-list {
+          display: flex !important;
+          flex-wrap: wrap !important;
+          gap: 4px !important;
+        }
+
+        .skill {
+          background: #e9ecef !important;
+          color: black !important;
+          border: 1px solid #ccc !important;
+          padding: 3px 6px !important;
+          font-size: 10px !important;
+          border-radius: 3px !important;
+        }
+
+        /* 语言徽章 */
+        .badge {
+          background: #e9ecef !important;
+          color: black !important;
+          border: 1px solid #ccc !important;
+          padding: 3px 8px !important;
+          font-size: 10px !important;
+          border-radius: 10px !important;
+          display: inline-block !important;
+          margin: 2px 4px 2px 0 !important;
+        }
+
+        /* 教育和工作经历 */
+        .education-item,
+        .project-item {
+          margin-bottom: 10px !important;
+        }
+
+        .title {
+          font-size: 12px !important;
+          color: black !important;
+          font-weight: bold !important;
+        }
+
+        .period {
+          color: #666 !important;
+          font-size: 10px !important;
+        }
+
+        .project-desc {
+          color: #666 !important;
+          font-size: 11px !important;
+          margin-top: 3px !important;
+        }
+
+        p {
+          font-size: 11px !important;
+          color: #666 !important;
+          line-height: 1.4 !important;
+          margin-bottom: 8px !important;
+        }
+
+        /* 确保所有内容可见 */
+        .left > *,
+        .right > * {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+
+        /* 防止分页 */
+        .card {
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+        "
+      >
+        <div>
+          <strong>個人简历</strong>
+        </div>
+        <div class="controls">
+          <button class="btn-primary" id="printBtn">列印 / 存為 PDF</button>
+          <button class="btn-ghost" id="toggleTheme">切換深色模式</button>
+        </div>
+      </div>
+
+      <div class="card" id="resumeCard">
+        <aside class="left">
+          <div
+            style="display: flex; flex-direction: column; align-items: center"
+          >
+            <img class="avatar" src="5FD78CAC-39F6-444B-97CD-1994E5E0337E.jpeg" alt="個人照片" />
+
+            <h1>李文泰</h1>
+            <div class="meta">亞洲大學 一年級</div>
+          </div>
+
+          <div class="section">
+            <h3>聯絡資訊</h3>
+            <div class="contact-item">
+              <strong>Email:</strong>
+              <span class="muted">thaihongchu@gmail.com</span>
+            </div>
+            <div class="contact-item">
+              <strong>地點:</strong> <span class="muted">台灣</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>技能</h3>
+            <div class="skill-list">
+              <span class="skill">基礎文書處理</span>
+              <span class="skill">西點/基礎烹飪</span>
+              <span class="skill">團隊合作</span>
+              <span class="skill">溝通能力</span>
+              <span class="skill">問題解決</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>語言</h3>
+            <div class="badge">中文（母語）</div>
+            <div class="badge">越文（基礎）</div>
+          </div>
+
+          <div class="section">
+            <h3>興趣</h3>
+            <div class="muted">烘焙與甜點製作 、攝影與記錄生活、咖啡文化、閱讀、旅行與文化探索 </div>
+          </div>
+        </aside>
+
+        <main class="right">
+          <section class="section">
+            <h3>個人簡介</h3>
+            <p class="muted">
+              我是亞洲大學健康管理系一年級學生（學號 113011131 。具備基礎文書處理能力，對烘焙與餐飲有濃厚興趣，樂於團隊合作與實作學習。積極學習新事物以豐富經驗與學習歷程
+            </p>
+          </section>
+
+          <section class="section">
+            <h3>學歷</h3>
+            <div class="education-item">
+              <div class="title">亞洲大學</div>
+              <div class="muted">在學中 · 一年級</div>
+              <div class="period">入學年份：2024</div>
+            </div>
+          </section>
+
+          <section class="section">
+            <h3>實作 / 專案</h3>
+            <div class="project-item">
+              <div class="title">校園烘焙社實習</div>
+              <div class="project-desc">
+                參與基礎甜點製作與咖啡拉花練習，學習食材搭配與製作流程
+              </div>
+            </div>
+            <div class="project-item">
+              <div class="title">個人食譜整理系統</div>
+              <div class="project-desc">
+                整理並記錄常用食譜，嘗試改良配方與分享給同學，建立個人烹飪知識庫
+              </div>
+            </div>
+            <div class="project-item">
+              <div class="title">校園活動策劃</div>
+              <div class="project-desc">
+                參與組織校內美食文化節，負責甜點展區規劃與執行
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <h3>工作經驗</h3>
+            <p class="muted">
+              工作經驗 —
+              餐廳服務員,負責點餐、送餐及顧客服務，確保顧客用餐體驗良好。協助顧客尋找商品並提供友善的服務。
+              超市店員,負責補貨、整理貨架，確保商品陳列整齊。
+            </p>
+          </section>
+
+          <section class="section">
+            <h3>職涯目標</h3>
+            <p class="muted">
+              短期：在餐飲業累積廚房經驗，學習專業烹飪技巧與餐廳營運知識。中期：成為專業廚師，專精於甜點與咖啡製作。長期：開設自己的咖啡館/餐廳，創造獨特的餐飲體驗。
+            </p>
+          </section>
+
+          <div
+            style="
+              display: flex;
+              gap: 12px;
+              margin-top: 12px;
+              align-items: center;
+            "
+          >
+            <button class="btn-primary" id="downloadHtml">下載 HTML 檔</button>
+            <button class="btn-ghost" id="copyId">複製履歷連結</button>
+          </div>
+        </main>
+      </div>
+
+      <footer>
+        這是一份自動產生的個人履歷範本。可按「列印 / 存為 PDF」輸出正式檔案。
+      </footer>
+    </div>
+
+    <script>
+      // Print
+      document
+        .getElementById("printBtn")
+        .addEventListener("click", () => window.print());
+
+      // Theme toggle (深色模式)
+      const toggle = document.getElementById("toggleTheme");
+      let isDark = false;
+
+      toggle.addEventListener("click", () => {
+        isDark = !isDark;
+        if (isDark) {
+          // 深色模式 - 提高对比度
+          document.documentElement.style.setProperty("--bg", "#0f172a");
+          document.documentElement.style.setProperty("--card", "#1e293b");
+          document.documentElement.style.setProperty("--muted", "#cbd5e1");
+          document.documentElement.style.setProperty("--accent", "#60a5fa");
+          document.documentElement.style.setProperty("--text", "#f1f5f9");
+          document.documentElement.style.setProperty("--border", "#334155");
+          document.documentElement.style.setProperty("--skill-bg", "#334155");
+          document.documentElement.style.setProperty("--skill-text", "#e2e8f0");
+          document.documentElement.style.setProperty(
+            "--title-color",
+            "#f8fafc"
+          );
+          document.documentElement.style.setProperty("--section-bg", "#1e293b");
+          document.documentElement.style.setProperty("--badge-bg", "#334155");
+          document.documentElement.style.setProperty(
+            "--project-desc",
+            "#cbd5e1"
+          );
+          document.documentElement.style.setProperty(
+            "--button-hover",
+            "#1e293b"
+          );
+          document.body.style.background =
+            "linear-gradient(180deg, #0f172a, #0b1220)";
+        } else {
+          // 浅色模式
+          document.documentElement.style.setProperty("--bg", "#f6f8fb");
+          document.documentElement.style.setProperty("--card", "#ffffff");
+          document.documentElement.style.setProperty("--muted", "#6b7280");
+          document.documentElement.style.setProperty("--accent", "#3b82f6");
+          document.documentElement.style.setProperty("--text", "#111827");
+          document.documentElement.style.setProperty("--border", "#e6eefc");
+          document.documentElement.style.setProperty("--skill-bg", "#f3f6ff");
+          document.documentElement.style.setProperty("--skill-text", "#0f172a");
+          document.documentElement.style.setProperty(
+            "--title-color",
+            "#1e293b"
+          );
+          document.documentElement.style.setProperty("--section-bg", "#fbfdff");
+          document.documentElement.style.setProperty("--badge-bg", "#eef6ff");
+          document.documentElement.style.setProperty(
+            "--project-desc",
+            "#4b5563"
+          );
+          document.documentElement.style.setProperty(
+            "--button-hover",
+            "#f0f7ff"
+          );
+          document.body.style.background =
+            "linear-gradient(180deg, #f6f8fb, #eef3fb)";
+        }
+      });
+
+      // Download HTML file
+      document.getElementById("downloadHtml").addEventListener("click", () => {
+        const blob = new Blob([document.documentElement.outerHTML], {
+          type: "text/html",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "resume.113011131.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      // Copy resume link
+      document.getElementById("copyId").addEventListener("click", () => {
+        navigator.clipboard &&
+          navigator.clipboard.writeText(window.location.href);
+        alert("履歷連結已複製到剪貼簿");
+      });
+    </script>
+  </body>
+</html>
